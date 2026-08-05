@@ -1,0 +1,32 @@
+================================================================================
+Log file: D:\HZC_HOME\HZC_CODE_D\deeplearning\nips_pinn\nips_pinn\RoPINN-main\arkan_compare_gpt\ARKAN\./results/1dwave_arkan\1dwave_20260603_235245.log
+================================================================================
+Model(
+  (biases): ModuleList(
+    (0-1): 2 x Linear(in_features=32, out_features=1, bias=False)
+    (2): Linear(in_features=1, out_features=1, bias=False)
+  )
+  (act_fun): ModuleList(
+    (0-2): 3 x KANLayer(
+      (base_fun): SiLU()
+    )
+  )
+  (base_fun): SiLU()
+  (symbolic_fun): ModuleList(
+    (0-2): 3 x Symbolic_KANLayer()
+  )
+)
+n_params: 26817
+data shape: (101, 101) device: cuda:0 baseline: persistence cfl2: 4.0
+scales: {'u': 1.0755773782730103}
+train t=1->2:   0%|                                                                                  | 0/40 [00:00<?, ?it/s]train t=1->2:   0%|                                                                       | 0/40 [00:01<?, ?it/s, loss=11.6]train t=1->2:   2%|#5                                                             | 1/40 [00:01<01:13,  1.89s/it, loss=11.6]train t=1->2:   2%|#5                                                             | 1/40 [00:03<02:20,  3.61s/it, loss=11.6]
+Traceback (most recent call last):
+  File "D:\HZC_HOME\HZC_CODE_D\deeplearning\nips_pinn\nips_pinn\RoPINN-main\arkan_compare_gpt\ARKAN\1d_wave_point_optimization.py", line 187, in <module>
+    loss.backward()
+  File "D:\anaconda3\envs\ropinn\lib\site-packages\torch\_tensor.py", line 647, in backward
+    torch.autograd.backward(
+  File "D:\anaconda3\envs\ropinn\lib\site-packages\torch\autograd\__init__.py", line 354, in backward
+    _engine_run_backward(
+  File "D:\anaconda3\envs\ropinn\lib\site-packages\torch\autograd\graph.py", line 829, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

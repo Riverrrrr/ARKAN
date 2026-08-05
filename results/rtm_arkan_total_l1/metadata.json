@@ -1,0 +1,50 @@
+{
+  "args": {
+    "model": "KAN",
+    "device": "cuda:0",
+    "data_dir": "D:\\HZC_HOME\\HZC_CODE_D\\deeplearning\\nips_pinn\\nips_pinn\\RoPINN-main\\RoPINN_ar_g\\./rtm_data",
+    "result_dir": "D:\\HZC_HOME\\HZC_CODE_D\\deeplearning\\nips_pinn\\nips_pinn\\RoPINN-main\\RoPINN_ar_g\\./results/rtm_arkan_total_l1",
+    "epochs_per_step": 40,
+    "batch_size": 8000,
+    "lr": 0.001,
+    "dt": 0.0001,
+    "dx": 1.0,
+    "dz": 1.0,
+    "source_x": 50,
+    "source_z": 0,
+    "start_t": 1,
+    "end_t": -1,
+    "chunk_size": 16384,
+    "save_every": 1,
+    "resume": false,
+    "rollout_loss_weight": 2.0,
+    "direct_data_loss_weight": 5.0,
+    "direct_l1_loss_weight": 2.0,
+    "correction_scale": "frame_max",
+    "point_scope": "all",
+    "kan_width": 32,
+    "grid": 5,
+    "k": 3,
+    "hidden_dim": 256,
+    "num_layer": 4
+  },
+  "u_shape": [
+    100,
+    80,
+    1000
+  ],
+  "v_shape": [
+    100,
+    80
+  ],
+  "wave_shape": [
+    121
+  ],
+  "feature_dim": 9,
+  "scales": {
+    "u": 11.291351153262411,
+    "v": 3200.0,
+    "r": 0.3199999928474426,
+    "wave": 1.0
+  }
+}

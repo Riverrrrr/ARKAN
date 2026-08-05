@@ -1,0 +1,18 @@
+Model(
+  (linear): Sequential(
+    (0): Linear(in_features=4, out_features=256, bias=True)
+    (1): Tanh()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): Tanh()
+    (4): Linear(in_features=256, out_features=2, bias=True)
+  )
+)
+67586
+output root: 0709_wave_ar_probe_pinn_e2500
+epochs: 2500, lr: 0.001, hidden_dim: 256, num_layer: 3, rollout_weight: 0.0, rollout_steps: 10
+Loss Step: 0.010855, Loss_Rollout: 0.000000
+Train Loss: 0.010855
+this is PINN
+relative L1 error: 0.333252
+relative L2 error: 0.368583
+PINNFinished. Total training time: 7.33 seconds

@@ -1,0 +1,103 @@
+Initialized model weights from: .\0716_reaction_ar_kan_pretrain_probe_e400\reaction\KAN\1dreaction_KAN_point_ar.pt
+Model(
+  (biases): ModuleList(
+    (0): Linear(in_features=8, out_features=1, bias=False)
+    (1): Linear(in_features=1, out_features=1, bias=False)
+  )
+  (act_fun): ModuleList(
+    (0-1): 2 x KANLayer(
+      (base_fun): SiLU()
+    )
+  )
+  (base_fun): SiLU()
+  (symbolic_fun): ModuleList(
+    (0-1): 2 x Symbolic_KANLayer()
+  )
+)
+713
+output root: 0716_reaction_strict_ar_kan_6000s_lr2e8
+pretrain_epochs: 0, epochs: 1, lr: 0.001, kan_width: 8, kan_grid: 5, hidden_dim: 512, num_layer: 4, residual_output: False, logit_output: True, teacher_weight: 0.0, rollout_weight: 1.0, rollout_steps: 100, rollout_lr: 2e-08, residual_weight: 0.0, min_train_seconds: 6100.0
+Strict AR training: u_0 -> predicted u_1 -> ... -> predicted u_100; no state is detached.
+AR epoch 1, rollout loss: 0.00326827, total loss: 0.00326827, elapsed: 2.88s
+AR epoch 25, rollout loss: 0.00324858, total loss: 0.00324858, elapsed: 67.39s
+AR epoch 50, rollout loss: 0.00322818, total loss: 0.00322818, elapsed: 134.37s
+AR epoch 75, rollout loss: 0.00320814, total loss: 0.00320814, elapsed: 201.24s
+AR epoch 100, rollout loss: 0.00318796, total loss: 0.00318796, elapsed: 268.29s
+AR epoch 125, rollout loss: 0.00316791, total loss: 0.00316791, elapsed: 335.28s
+AR epoch 150, rollout loss: 0.00314800, total loss: 0.00314800, elapsed: 402.12s
+AR epoch 175, rollout loss: 0.00312822, total loss: 0.00312822, elapsed: 469.24s
+AR epoch 200, rollout loss: 0.00310848, total loss: 0.00310848, elapsed: 536.23s
+AR epoch 225, rollout loss: 0.00308878, total loss: 0.00308878, elapsed: 603.13s
+AR epoch 250, rollout loss: 0.00306925, total loss: 0.00306925, elapsed: 670.04s
+AR epoch 275, rollout loss: 0.00304997, total loss: 0.00304997, elapsed: 736.96s
+AR epoch 300, rollout loss: 0.00303062, total loss: 0.00303062, elapsed: 804.06s
+AR epoch 325, rollout loss: 0.00301151, total loss: 0.00301151, elapsed: 870.99s
+AR epoch 350, rollout loss: 0.00299243, total loss: 0.00299243, elapsed: 937.97s
+AR epoch 375, rollout loss: 0.00297339, total loss: 0.00297339, elapsed: 1004.86s
+AR epoch 400, rollout loss: 0.00295451, total loss: 0.00295451, elapsed: 1072.04s
+AR epoch 425, rollout loss: 0.00293570, total loss: 0.00293570, elapsed: 1139.43s
+AR epoch 450, rollout loss: 0.00291704, total loss: 0.00291704, elapsed: 1206.57s
+AR epoch 475, rollout loss: 0.00289841, total loss: 0.00289841, elapsed: 1273.75s
+AR epoch 500, rollout loss: 0.00287987, total loss: 0.00287987, elapsed: 1340.81s
+AR epoch 525, rollout loss: 0.00286147, total loss: 0.00286147, elapsed: 1407.69s
+AR epoch 550, rollout loss: 0.00284305, total loss: 0.00284305, elapsed: 1474.84s
+AR epoch 575, rollout loss: 0.00282485, total loss: 0.00282485, elapsed: 1541.93s
+AR epoch 600, rollout loss: 0.00280686, total loss: 0.00280686, elapsed: 1608.71s
+AR epoch 625, rollout loss: 0.00278883, total loss: 0.00278883, elapsed: 1675.68s
+AR epoch 650, rollout loss: 0.00277090, total loss: 0.00277090, elapsed: 1742.63s
+AR epoch 675, rollout loss: 0.00275310, total loss: 0.00275310, elapsed: 1809.72s
+AR epoch 700, rollout loss: 0.00273544, total loss: 0.00273544, elapsed: 1876.94s
+AR epoch 725, rollout loss: 0.00271786, total loss: 0.00271786, elapsed: 1943.99s
+AR epoch 750, rollout loss: 0.00270032, total loss: 0.00270032, elapsed: 2010.98s
+AR epoch 775, rollout loss: 0.00268294, total loss: 0.00268294, elapsed: 2078.16s
+AR epoch 800, rollout loss: 0.00266569, total loss: 0.00266569, elapsed: 2145.28s
+AR epoch 825, rollout loss: 0.00264847, total loss: 0.00264847, elapsed: 2212.24s
+AR epoch 850, rollout loss: 0.00263140, total loss: 0.00263140, elapsed: 2279.34s
+AR epoch 875, rollout loss: 0.00261443, total loss: 0.00261443, elapsed: 2346.58s
+AR epoch 900, rollout loss: 0.00259751, total loss: 0.00259751, elapsed: 2413.65s
+AR epoch 925, rollout loss: 0.00258071, total loss: 0.00258071, elapsed: 2480.83s
+AR epoch 950, rollout loss: 0.00256400, total loss: 0.00256400, elapsed: 2547.89s
+AR epoch 975, rollout loss: 0.00254747, total loss: 0.00254747, elapsed: 2615.00s
+AR epoch 1000, rollout loss: 0.00253098, total loss: 0.00253098, elapsed: 2682.04s
+AR epoch 1025, rollout loss: 0.00251457, total loss: 0.00251457, elapsed: 2749.02s
+AR epoch 1050, rollout loss: 0.00249828, total loss: 0.00249828, elapsed: 2815.95s
+AR epoch 1075, rollout loss: 0.00248207, total loss: 0.00248207, elapsed: 2883.15s
+AR epoch 1100, rollout loss: 0.00246600, total loss: 0.00246600, elapsed: 2950.26s
+AR epoch 1125, rollout loss: 0.00245006, total loss: 0.00245006, elapsed: 3026.98s
+AR epoch 1150, rollout loss: 0.00243423, total loss: 0.00243423, elapsed: 3129.45s
+AR epoch 1175, rollout loss: 0.00241843, total loss: 0.00241843, elapsed: 3219.44s
+AR epoch 1200, rollout loss: 0.00240274, total loss: 0.00240274, elapsed: 3308.56s
+AR epoch 1225, rollout loss: 0.00238714, total loss: 0.00238714, elapsed: 3394.83s
+AR epoch 1250, rollout loss: 0.00237171, total loss: 0.00237171, elapsed: 3486.24s
+AR epoch 1275, rollout loss: 0.00235634, total loss: 0.00235634, elapsed: 3573.07s
+AR epoch 1300, rollout loss: 0.00234111, total loss: 0.00234111, elapsed: 3655.36s
+AR epoch 1325, rollout loss: 0.00232600, total loss: 0.00232600, elapsed: 3757.37s
+AR epoch 1350, rollout loss: 0.00231102, total loss: 0.00231102, elapsed: 3865.38s
+AR epoch 1375, rollout loss: 0.00229612, total loss: 0.00229612, elapsed: 3968.49s
+AR epoch 1400, rollout loss: 0.00228138, total loss: 0.00228138, elapsed: 4073.17s
+AR epoch 1425, rollout loss: 0.00226664, total loss: 0.00226664, elapsed: 4178.81s
+AR epoch 1450, rollout loss: 0.00225204, total loss: 0.00225204, elapsed: 4285.90s
+AR epoch 1475, rollout loss: 0.00223754, total loss: 0.00223754, elapsed: 4392.23s
+AR epoch 1500, rollout loss: 0.00222314, total loss: 0.00222314, elapsed: 4500.15s
+AR epoch 1525, rollout loss: 0.00220887, total loss: 0.00220887, elapsed: 4600.29s
+AR epoch 1550, rollout loss: 0.00219460, total loss: 0.00219460, elapsed: 4687.77s
+AR epoch 1575, rollout loss: 0.00218052, total loss: 0.00218052, elapsed: 4773.99s
+AR epoch 1600, rollout loss: 0.00216653, total loss: 0.00216653, elapsed: 4864.62s
+AR epoch 1625, rollout loss: 0.00215259, total loss: 0.00215259, elapsed: 4968.82s
+AR epoch 1650, rollout loss: 0.00213877, total loss: 0.00213877, elapsed: 5073.11s
+AR epoch 1675, rollout loss: 0.00212512, total loss: 0.00212512, elapsed: 5175.62s
+AR epoch 1700, rollout loss: 0.00211148, total loss: 0.00211148, elapsed: 5279.22s
+AR epoch 1725, rollout loss: 0.00209798, total loss: 0.00209798, elapsed: 5388.69s
+AR epoch 1750, rollout loss: 0.00208458, total loss: 0.00208458, elapsed: 5494.16s
+AR epoch 1775, rollout loss: 0.00207129, total loss: 0.00207129, elapsed: 5599.57s
+AR epoch 1800, rollout loss: 0.00205805, total loss: 0.00205805, elapsed: 5704.14s
+AR epoch 1825, rollout loss: 0.00204490, total loss: 0.00204490, elapsed: 5812.65s
+AR epoch 1850, rollout loss: 0.00203185, total loss: 0.00203185, elapsed: 5919.92s
+AR epoch 1875, rollout loss: 0.00201898, total loss: 0.00201898, elapsed: 6026.18s
+Loss Step: 0.000000, Loss_Rollout: 0.002010, Loss_Res: 0.000000
+Train Loss: 0.002010
+this is KAN
+relative L1 error: 0.054837
+relative L2 error: 0.066093
+KANFinished. Total training time: 6103.21 seconds
+Completed strict AR epochs: 1893

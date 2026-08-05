@@ -1,0 +1,22 @@
+Model(
+  (inlayer): QRes_block(
+    (H1): Linear(in_features=3, out_features=256, bias=True)
+    (H2): Linear(in_features=3, out_features=256, bias=True)
+    (act): Sigmoid()
+  )
+  (layers): ModuleList(
+    (0-2): 3 x QRes_block(
+      (H1): Linear(in_features=256, out_features=256, bias=True)
+      (H2): Linear(in_features=256, out_features=256, bias=True)
+      (act): Sigmoid()
+    )
+  )
+  (outlayer): Linear(in_features=256, out_features=1, bias=True)
+)
+397057
+Loss Res:  nan, Loss_BC:  nan, Loss_IC: 0.000000
+Train Loss:  nan
+this is QRes
+relative L1 error:  nan
+relative L2 error:  nan
+QResFinished. Total training time: 8950.74 seconds

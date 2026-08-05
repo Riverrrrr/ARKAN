@@ -1,0 +1,34 @@
+{
+  "args": {
+    "model": "KAN",
+    "device": "cuda:0",
+    "result_dir": "D:\\HZC_HOME\\HZC_CODE_D\\deeplearning\\nips_pinn\\nips_pinn\\RoPINN-main\\arkan_compare_gpt\\ARKAN\\./results/1dconvection_arkan",
+    "nx": 101,
+    "nt": 101,
+    "epochs_per_step": 40,
+    "batch_size": 101,
+    "lr": 0.001,
+    "start_t": 0,
+    "end_t": -1,
+    "baseline": "persistence",
+    "rollout_loss_weight": 1.0,
+    "direct_data_loss_weight": 1.0,
+    "direct_l1_loss_weight": 0.1,
+    "save_every": 10,
+    "resume": false,
+    "kan_width": 32,
+    "kan_depth": 2,
+    "grid": 5,
+    "k": 3,
+    "hidden_dim": 256,
+    "num_layer": 4
+  },
+  "feature_dim": 4,
+  "data_shape": [
+    101,
+    101
+  ],
+  "scales": {
+    "u": 1.0
+  }
+}

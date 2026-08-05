@@ -1,0 +1,24 @@
+Model(
+  (inlayer): QRes_block(
+    (H1): Linear(in_features=4, out_features=256, bias=True)
+    (H2): Linear(in_features=4, out_features=256, bias=True)
+    (act): Sigmoid()
+  )
+  (layers): ModuleList(
+    (0-1): 2 x QRes_block(
+      (H1): Linear(in_features=256, out_features=256, bias=True)
+      (H2): Linear(in_features=256, out_features=256, bias=True)
+      (act): Sigmoid()
+    )
+  )
+  (outlayer): Linear(in_features=256, out_features=2, bias=True)
+)
+266242
+output root: 0709_wave_ar_probe_qres_e12000_lr2e3
+epochs: 12000, lr: 0.002, hidden_dim: 256, num_layer: 3, rollout_weight: 0.0, rollout_steps: 10
+Loss Step: 0.000322, Loss_Rollout: 0.000000
+Train Loss: 0.000322
+this is QRes
+relative L1 error: 0.301382
+relative L2 error: 0.447386
+QResFinished. Total training time: 29.65 seconds

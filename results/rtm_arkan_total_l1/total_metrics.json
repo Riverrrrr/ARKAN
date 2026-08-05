@@ -1,0 +1,8 @@
+{
+  "start_frame": 2,
+  "end_frame_exclusive": 1000,
+  "total_rel_l1": 0.5111730725172006,
+  "total_rel_l2": 0.6032004626753357,
+  "mean_norm_l1": 0.10706745095551241,
+  "mean_norm_l2": 0.12458400246973685
+}

@@ -1,0 +1,18 @@
+Model(
+  (linear): Sequential(
+    (0): Linear(in_features=4, out_features=256, bias=True)
+    (1): SinAct()
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): Tanh()
+    (4): Linear(in_features=256, out_features=2, bias=True)
+  )
+)
+67586
+output root: 0709_wave_ar_probe_fls_e8000
+epochs: 8000, lr: 0.001, hidden_dim: 256, num_layer: 3, rollout_weight: 0.0, rollout_steps: 10
+Loss Step: 0.000145, Loss_Rollout: 0.000000
+Train Loss: 0.000145
+this is FLS
+relative L1 error: 0.184937
+relative L2 error: 0.193112
+FLSFinished. Total training time: 20.20 seconds

@@ -1,0 +1,18 @@
+Model(
+  (linear): Sequential(
+    (0): Linear(in_features=23, out_features=512, bias=True)
+    (1): Tanh()
+    (2): Linear(in_features=512, out_features=512, bias=True)
+    (3): Tanh()
+    (4): Linear(in_features=512, out_features=512, bias=True)
+    (5): Tanh()
+    (6): Linear(in_features=512, out_features=21, bias=True)
+  )
+)
+548373
+Loss Res: 0.000174, Loss_BC: 0.000141, Loss_IC: 0.000000
+Train Loss: 0.000316
+this is PINN
+relative L1 error: 0.313608
+relative L2 error: 0.474638
+PINNFinished. Total training time: 63.12 seconds

@@ -1,0 +1,16 @@
+Model(
+  (biases): ModuleList(
+    (0-1): 2 x Linear(in_features=5, out_features=1, bias=False)
+    (2): Linear(in_features=21, out_features=1, bias=False)
+  )
+  (act_fun): ModuleList(
+    (0-2): 3 x KANLayer(
+      (base_fun): SiLU()
+    )
+  )
+  (base_fun): SiLU()
+  (symbolic_fun): ModuleList(
+    (0-2): 3 x Symbolic_KANLayer()
+  )
+)
+5421
