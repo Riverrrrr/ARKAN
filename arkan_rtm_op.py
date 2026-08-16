@@ -24,10 +24,12 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 '''
 
+
 import argparse
 import json
 import os
 import random
+import sys
 import time
 
 import matplotlib.pyplot as plt
@@ -283,7 +285,7 @@ def compute_total_metrics(pred_all, u_data, start_frame, end_frame):
 
 
 parser = argparse.ArgumentParser("RTM AR-KAN Point Optimization")
-parser.add_argument("--model", type=str, default="ARKAN")
+parser.add_argument("--model", type=str, default="KAN")
 parser.add_argument("--device", type=str, default="cuda:0")
 parser.add_argument("--data_dir", type=str, default="./rtm_data")
 parser.add_argument("--result_dir", type=str, default="./results/rtm_arkan")
@@ -300,6 +302,12 @@ parser.add_argument("--end_t", type=int, default=-1)
 parser.add_argument("--chunk_size", type=int, default=16384)
 parser.add_argument("--save_every", type=int, default=1)
 parser.add_argument("--resume", action="store_true")
+parser.add_argument("--test_only", action="store_true", help="Load a saved model and run rollout inference only.")
+parser.add_argument("--test_model_path", type=str, default=None, help="Path to final_*.pt or checkpoint/latest.pt.")
+parser.add_argument("--test_checkpoint_dir", type=str, default=None, help="Directory containing one checkpoint per time step.")
+parser.add_argument("--test_checkpoint_pattern", type=str, default="checkpoint_t{t:04d}.pt", help="Checkpoint filename pattern formatted with t=t_idx.")
+parser.add_argument("--test_metadata_path", type=str, default=None, help="Optional metadata.json; defaults to the model directory.")
+parser.add_argument("--test_output_dir", type=str, default=None, help="Test outputs; defaults to the model directory/test_output.")
 parser.add_argument("--rollout_loss_weight", type=float, default=1.0)
 parser.add_argument("--direct_data_loss_weight", type=float, default=1.0)
 parser.add_argument("--direct_l1_loss_weight", type=float, default=1.0)
@@ -313,6 +321,52 @@ parser.add_argument("--num_layer", type=int, default=4)
 args = parser.parse_args()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
+if args.test_model_path and not os.path.isabs(args.test_model_path):
+    args.test_model_path = os.path.join(script_dir, args.test_model_path)
+if args.test_checkpoint_dir and not os.path.isabs(args.test_checkpoint_dir):
+    args.test_checkpoint_dir = os.path.join(script_dir, args.test_checkpoint_dir)
+if args.test_metadata_path and not os.path.isabs(args.test_metadata_path):
+    args.test_metadata_path = os.path.join(script_dir, args.test_metadata_path)
+
+test_metadata = None
+if args.test_only:
+    if not args.test_model_path and not args.test_checkpoint_dir:
+        parser.error("--test_only requires --test_model_path or --test_checkpoint_dir.")
+    if args.test_model_path and args.test_checkpoint_dir:
+        parser.error("Use only one of --test_model_path and --test_checkpoint_dir.")
+    if args.test_model_path and not os.path.isfile(args.test_model_path):
+        parser.error(f"Test model file does not exist: {args.test_model_path}")
+    if args.test_checkpoint_dir and not os.path.isdir(args.test_checkpoint_dir):
+        parser.error(f"Test checkpoint directory does not exist: {args.test_checkpoint_dir}")
+
+    test_source_dir = args.test_checkpoint_dir or os.path.dirname(args.test_model_path)
+    metadata_path = args.test_metadata_path or os.path.join(
+        test_source_dir, "metadata.json"
+    )
+    if os.path.isfile(metadata_path):
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            test_metadata = json.load(f)
+
+        saved_args = test_metadata.get("args", {})
+        restore_names = (
+            "model", "data_dir", "dt", "dx", "dz", "source_x", "source_z",
+            "correction_scale", "point_scope", "kan_width", "grid", "k",
+            "hidden_dim", "num_layer",
+        )
+        supplied_options = {item.split("=", 1)[0] for item in sys.argv[1:] if item.startswith("--")}
+        for name in restore_names:
+            if f"--{name}" not in supplied_options and name in saved_args:
+                setattr(args, name, saved_args[name])
+        print(f"Loaded test metadata: {metadata_path}")
+    else:
+        print(f"Warning: metadata.json not found at {metadata_path}; using command-line/default settings.")
+
+    if args.test_output_dir is None:
+        args.test_output_dir = os.path.join(test_source_dir, "test_output")
+    elif not os.path.isabs(args.test_output_dir):
+        args.test_output_dir = os.path.join(script_dir, args.test_output_dir)
+    args.result_dir = args.test_output_dir
+
 if not os.path.isabs(args.data_dir):
     args.data_dir = os.path.join(script_dir, args.data_dir)
 if not os.path.isabs(args.result_dir):
@@ -324,8 +378,8 @@ os.makedirs(os.path.join(args.result_dir, "frames"), exist_ok=True)
 
 start_time = time.time()
 
-u_path = os.path.join(args.data_dir, "u_abc_128_0.npy")
-v_path = os.path.join(args.data_dir, "vmodel_256.npy")
+u_path = os.path.join(args.data_dir, "u_abc.npy")
+v_path = os.path.join(args.data_dir, "vmodel.npy")
 wave_path = os.path.join(args.data_dir, "wave.npy")
 
 u_data = np.load(u_path, mmap_mode="r")
@@ -350,10 +404,22 @@ scales = {
     "r": safe_scale(float(torch.max(torch.abs(r)).detach().cpu())),
     "wave": safe_scale(np.max(np.abs(wave_np))),
 }
+if args.test_only and test_metadata is not None and "scales" in test_metadata:
+    scales = {name: safe_scale(value) for name, value in test_metadata["scales"].items()}
 
-in_dim = 9
+in_dim = int(test_metadata.get("feature_dim", 9)) if test_metadata is not None else 9
 model = make_model(args, in_dim, device)
 optimizer = Adam(model.parameters(), lr=args.lr)
+
+if args.test_only and args.test_model_path:
+    saved_object = torch.load(args.test_model_path, map_location=device)
+    if isinstance(saved_object, dict) and "model_state_dict" in saved_object:
+        state_dict = saved_object["model_state_dict"]
+    else:
+        state_dict = saved_object
+    model.load_state_dict(state_dict)
+    nn.Module.train(model, False)
+    print(f"Loaded test model: {args.test_model_path}")
 
 print(model)
 print("n_params:", get_n_params(model))
@@ -380,7 +446,7 @@ else:
     pred_all[:, :, 0] = np.asarray(u_data[:, :, 0], dtype=np.float32)
     pred_all[:, :, 1] = np.asarray(u_data[:, :, 1], dtype=np.float32)
 
-resume_checkpoint = latest_checkpoint(args.result_dir) if args.resume else None
+resume_checkpoint = latest_checkpoint(args.result_dir) if args.resume and not args.test_only else None
 if resume_checkpoint is not None:
     ckpt = torch.load(resume_checkpoint, map_location=device)
     model.load_state_dict(ckpt["model_state_dict"])
@@ -406,6 +472,22 @@ else:
     loss_history = []
 
 for t_idx in range(current_start_t, end_t + 1):
+    if args.test_only and args.test_checkpoint_dir:
+        checkpoint_name = args.test_checkpoint_pattern.format(t=t_idx)
+        checkpoint_path = os.path.join(args.test_checkpoint_dir, checkpoint_name)
+        if not os.path.isfile(checkpoint_path):
+            raise FileNotFoundError(
+                f"Checkpoint for t={t_idx} does not exist: {checkpoint_path}"
+            )
+        saved_object = torch.load(checkpoint_path, map_location=device)
+        if isinstance(saved_object, dict) and "model_state_dict" in saved_object:
+            state_dict = saved_object["model_state_dict"]
+        else:
+            state_dict = saved_object
+        model.load_state_dict(state_dict)
+        nn.Module.train(model, False)
+        print(f"Loaded checkpoint for t={t_idx}: {checkpoint_path}")
+
     true_prev = torch.tensor(np.asarray(u_data[:, :, t_idx - 1], dtype=np.float32), device=device)
     true_curr = torch.tensor(np.asarray(u_data[:, :, t_idx], dtype=np.float32), device=device)
     true_next = torch.tensor(np.asarray(u_data[:, :, t_idx + 1], dtype=np.float32), device=device)
@@ -432,7 +514,8 @@ for t_idx in range(current_start_t, end_t + 1):
 
     nn.Module.train(model, True)
     step_losses = []
-    progress = tqdm(range(args.epochs_per_step), desc=f"train t={t_idx}->{t_idx + 1}")
+    epochs_this_step = 0 if args.test_only else args.epochs_per_step
+    progress = tqdm(range(epochs_this_step), desc=f"train t={t_idx}->{t_idx + 1}")
     for _ in progress:
         flat_ids = torch.randint(0, point_count, (batch_size,), device=device)
         if args.point_scope == "all":
@@ -567,14 +650,16 @@ for t_idx in range(current_start_t, end_t + 1):
         np.save(pred_all_path, pred_all)
         with open(loss_history_path, "w", encoding="utf-8") as f:
             json.dump(loss_history, f, indent=2)
-        save_checkpoint(args.result_dir, model, optimizer, t_idx, pred_curr, pred_next, elapsed)
+        if not args.test_only:
+            save_checkpoint(args.result_dir, model, optimizer, t_idx, pred_curr, pred_next, elapsed)
 
     pred_prev = pred_curr.detach()
     pred_curr = pred_next.detach()
 
 total_elapsed = elapsed_before + time.time() - start_time
 np.save(pred_all_path, pred_all)
-torch.save(model.state_dict(), os.path.join(args.result_dir, f"final_{args.model}.pt"))
+if not args.test_only:
+    torch.save(model.state_dict(), os.path.join(args.result_dir, f"final_{args.model}.pt"))
 
 with open(loss_history_path, "w", encoding="utf-8") as f:
     json.dump(loss_history, f, indent=2)
@@ -588,24 +673,8 @@ total_metrics = compute_total_metrics(
 with open(os.path.join(args.result_dir, "total_metrics.json"), "w", encoding="utf-8") as f:
     json.dump(total_metrics, f, indent=2)
 
-plt.figure(figsize=(5, 4))
-plt.imshow(pred_all[:, :, end_t + 1].T, aspect="auto", cmap="seismic")
-plt.title(f"Predicted frame t={end_t + 1}")
-plt.colorbar()
-plt.tight_layout()
-plt.savefig(os.path.join(args.result_dir, f"pred_t{end_t + 1:04d}.png"), dpi=150)
-plt.close()
-
-plt.figure(figsize=(5, 4))
-plt.imshow((pred_all[:, :, end_t + 1] - np.asarray(u_data[:, :, end_t + 1], dtype=np.float32)).T,
-           aspect="auto", cmap="coolwarm")
-plt.title(f"Error frame t={end_t + 1}")
-plt.colorbar()
-plt.tight_layout()
-plt.savefig(os.path.join(args.result_dir, f"error_t{end_t + 1:04d}.png"), dpi=150)
-plt.close()
-
-print(f"Finished. Total training time: {total_elapsed:.2f} seconds")
+mode_name = "testing" if args.test_only else "training"
+print(f"Finished. Total {mode_name} time: {total_elapsed:.2f} seconds")
 print(
     "Total metrics "
     f"frames=[{total_metrics['start_frame']}, {total_metrics['end_frame_exclusive']}) "
